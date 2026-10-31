@@ -1,0 +1,55 @@
+{
+  "name": "dsh-status-bar",
+  "version": "1.0.0",
+  "description": "Full-width DSH status bar with DeepSeek, Codex and OpenRouter balances and an internet radio player (EVE Online soundtrack included).",
+  "license": "MIT",
+  "author": "d.volchkov",
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "cordis",
+    "status-bar",
+    "balance",
+    "usage",
+    "radio",
+    "deepseek",
+    "openrouter",
+    "codex"
+  ],
+  "type": "module",
+  "icon": "./icon.svg",
+  "engines": {
+    "dsh": ">=0.2.0-rc.1 <0.3.0-0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "cordis.patch.yml",
+    "locale/*.json",
+    "icon.svg",
+    "README.md",
+    "LICENSE"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-conversation"
+      ]
+    }
+  }
+}

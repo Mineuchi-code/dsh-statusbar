@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "状态栏",
+    "description": "窗口底部的全宽状态栏，显示 DeepSeek、Codex 和 OpenRouter 余额以及网络电台。"
+  }
+}
