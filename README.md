@@ -16,6 +16,7 @@ dsh plugin --profile desktop add dsh-status-bar
 Or point DSH at this directory with Plugin Manager → Add plugin → local package.
 
 Requires DSH `>=0.2.0-rc.1 <0.3.0-0`. License: MIT.
+Source: https://github.com/Mineuchi-code/dsh-statusbar
 
 ## Chips
 

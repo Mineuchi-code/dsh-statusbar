@@ -4,6 +4,14 @@
   "description": "Full-width DSH status bar with DeepSeek, Codex and OpenRouter balances and an internet radio player (EVE Online soundtrack included).",
   "license": "MIT",
   "author": "d.volchkov",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mineuchi-code/dsh-statusbar.git"
+  },
+  "homepage": "https://github.com/Mineuchi-code/dsh-statusbar#readme",
+  "bugs": {
+    "url": "https://github.com/Mineuchi-code/dsh-statusbar/issues"
+  },
   "keywords": [
     "dsh",
     "dsh-plugin",

@@ -22,15 +22,15 @@ npm publish --dry-run
 
 ## Public source
 
-Create an empty public GitHub repository, then from this directory:
+Repository: https://github.com/Mineuchi-code/dsh-statusbar (public, MIT).
+
+Push the local commit after `npm login` or from a machine with GitHub credentials:
 
 ```powershell
-git remote add origin https://github.com/<owner>/dsh-status-bar.git
+cd E:\DeepSeekProjects\Test2\dsh-statusbar
+git remote add origin https://github.com/Mineuchi-code/dsh-statusbar.git
 git push -u origin main
 ```
-
-Then add the repository to `package.json` (`repository`, `homepage`) and publish a patch
-version (`1.0.1`), so the npm page links the source.
 
 ## Market submission (dshopen.org)
 
@@ -43,7 +43,7 @@ and paste the values below.
 https://www.npmjs.com/package/dsh-status-bar
 ```
 
-(or the GitHub repository URL, including the subdirectory if the plugin moves into one)
+or the source repository: https://github.com/Mineuchi-code/dsh-statusbar
 
 **Summary**
 
@@ -58,7 +58,7 @@ MIT, no telemetry, keys stay on the Host.
 
 ```
 - npm: dsh-status-bar@1.0.0
-- Repository: <fill after creating it>
+- Repository: https://github.com/Mineuchi-code/dsh-statusbar
 - License: MIT
 - Requires DSH: >=0.2.0-rc.1 <0.3.0-0
 - Category: interface
