@@ -1,5 +1,7 @@
 # Status Bar
 
+[![npm](https://img.shields.io/npm/v/@mineuchi/dsh-status-bar.svg)](https://www.npmjs.com/package/@mineuchi/dsh-status-bar)
+
 A full-width bar at the bottom of the DSH window with provider balance chips and an
 internet radio player. It is an ordinary persistent DSH bundle: the Host half talks to
 the provider APIs and serves one cached JSON snapshot, the Client half renders it in the

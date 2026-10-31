@@ -1,14 +1,16 @@
 # Publishing @mineuchi/dsh-status-bar
 
-The package is publish-ready. What remains needs your accounts (npm and GitHub).
+Status: **npm published** as `@mineuchi/dsh-status-bar@1.0.0` (2026-10-31). Source pushed to
+GitHub. The only remaining step is the maintainer-reviewed listing request on dshopen.org.
 
 ## npm
 
 Package name: `@mineuchi/dsh-status-bar` (npm rejected the unscoped name as too similar to
 the existing `dsh-statusbar`).
+Published: https://www.npmjs.com/package/@mineuchi/dsh-status-bar
 Version: `1.0.0`, license MIT, `engines.dsh: >=0.2.0-rc.1 <0.3.0-0`.
 
-After `npm login` in this machine:
+For the next release bump the version, then:
 
 ```powershell
 cd E:\DeepSeekProjects\Test2\dsh-statusbar
@@ -23,15 +25,7 @@ npm publish --dry-run
 
 ## Public source
 
-Repository: https://github.com/Mineuchi-code/dsh-statusbar (public, MIT).
-
-Push the local commit after `npm login` or from a machine with GitHub credentials:
-
-```powershell
-cd E:\DeepSeekProjects\Test2\dsh-statusbar
-git remote add origin https://github.com/Mineuchi-code/dsh-statusbar.git
-git push -u origin main
-```
+Repository: https://github.com/Mineuchi-code/dsh-statusbar (public, MIT). Pushed.
 
 ## Market submission (dshopen.org)
 
@@ -66,7 +60,7 @@ MIT, no telemetry, keys stay on the Host.
 - Icon: icon.svg inside the package (also ./icon export)
 - Install: dsh plugin --profile desktop add @mineuchi/dsh-status-bar
 - Providers: DeepSeek account balance, Codex ChatGPT usage, OpenRouter credits
-- Radio: 7 stations, playlist stations supported via `tracks`
+- Radio: 8 stations, playlist stations supported via `tracks`
 ```
 
 The index is rebuilt every 6 hours; after the issue is accepted the plugin appears in the
