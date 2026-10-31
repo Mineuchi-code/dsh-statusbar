@@ -10,7 +10,7 @@ the provider APIs and serves one cached JSON snapshot, the Client half renders i
 From npm:
 
 ```bash
-dsh plugin --profile desktop add dsh-status-bar
+dsh plugin --profile desktop add @mineuchi/dsh-status-bar
 ```
 
 Or point DSH at this directory with Plugin Manager → Add plugin → local package.
@@ -62,7 +62,7 @@ Edit the profile patch (`cordis.patch.yml`) and add `config` to the `dsh-statusb
 
 ```yaml
 - id: dsh-statusbar
-  name: 'dsh-status-bar'
+  name: '@mineuchi/dsh-status-bar'
   config:
     refreshSeconds: 120        # 15..3600, lazy cache TTL
     compact: false             # hide chip labels

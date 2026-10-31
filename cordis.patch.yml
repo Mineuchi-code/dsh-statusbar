@@ -1,3 +1,3 @@
 - insert:
     - id: dsh-statusbar
-      name: 'dsh-status-bar'
+      name: '@mineuchi/dsh-status-bar'

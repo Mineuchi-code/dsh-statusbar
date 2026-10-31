@@ -1,10 +1,11 @@
-# Publishing dsh-status-bar
+# Publishing @mineuchi/dsh-status-bar
 
 The package is publish-ready. What remains needs your accounts (npm and GitHub).
 
 ## npm
 
-Package name: `dsh-status-bar` (free on npm as of 2026-10-31).
+Package name: `@mineuchi/dsh-status-bar` (npm rejected the unscoped name as too similar to
+the existing `dsh-statusbar`).
 Version: `1.0.0`, license MIT, `engines.dsh: >=0.2.0-rc.1 <0.3.0-0`.
 
 After `npm login` in this machine:
@@ -40,7 +41,7 @@ and paste the values below.
 **Plugin link**
 
 ```
-https://www.npmjs.com/package/dsh-status-bar
+https://www.npmjs.com/package/@mineuchi/dsh-status-bar
 ```
 
 or the source repository: https://github.com/Mineuchi-code/dsh-statusbar
@@ -48,7 +49,7 @@ or the source repository: https://github.com/Mineuchi-code/dsh-statusbar
 **Summary**
 
 ```
-dsh-status-bar — full-width status bar for DeepSeek Harness: DeepSeek, Codex and
+@mineuchi/dsh-status-bar — full-width status bar for DeepSeek Harness: DeepSeek, Codex and
 OpenRouter balance chips with mini icons, compact mode, 5h/7d Codex quota tooltips, and
 an internet radio player (SomaFM, Radio Paradise, and the EVE Online original soundtrack).
 MIT, no telemetry, keys stay on the Host.
@@ -57,13 +58,13 @@ MIT, no telemetry, keys stay on the Host.
 **Additional details**
 
 ```
-- npm: dsh-status-bar@1.0.0
+- npm: @mineuchi/dsh-status-bar@1.0.0
 - Repository: https://github.com/Mineuchi-code/dsh-statusbar
 - License: MIT
 - Requires DSH: >=0.2.0-rc.1 <0.3.0-0
 - Category: interface
 - Icon: icon.svg inside the package (also ./icon export)
-- Install: dsh plugin --profile desktop add dsh-status-bar
+- Install: dsh plugin --profile desktop add @mineuchi/dsh-status-bar
 - Providers: DeepSeek account balance, Codex ChatGPT usage, OpenRouter credits
 - Radio: 7 stations, playlist stations supported via `tracks`
 ```
@@ -73,9 +74,8 @@ Discover tab of the Open Plugin Market.
 
 ## After publication
 
-Add the badge to the README (replace `<package>` with `dsh-status-bar`,
-scope packages as `%40scope/name`):
+Add the badge to the README (replace `<package>` with `%40mineuchi/dsh-status-bar`):
 
 ```md
-[![Open Plugin Market](https://img.shields.io/endpoint?url=https%3A%2F%2Fdshopen.org%2Fbadge%2Fdsh-status-bar.json)](https://dshopen.org/zh/plugins/dsh-status-bar/)
+[![Open Plugin Market](https://img.shields.io/endpoint?url=https%3A%2F%2Fdshopen.org%2Fbadge%2F%40mineuchi%2Fdsh-status-bar.json)](https://dshopen.org/zh/plugins/@mineuchi/dsh-status-bar/)
 ```

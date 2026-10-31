@@ -6,7 +6,7 @@
  * every network call; this module only reads one same-origin JSON snapshot.
  */
 window.__ModuleLoader__.load({
-  id: 'dsh-status-bar',
+  id: '@mineuchi/dsh-status-bar',
   factory(require) {
     const React = require('react')
     const h = React.createElement

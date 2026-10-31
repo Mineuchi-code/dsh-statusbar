@@ -1,5 +1,5 @@
 {
-  "name": "dsh-status-bar",
+  "name": "@mineuchi/dsh-status-bar",
   "version": "1.0.0",
   "description": "Full-width DSH status bar with DeepSeek, Codex and OpenRouter balances and an internet radio player (EVE Online soundtrack included).",
   "license": "MIT",
