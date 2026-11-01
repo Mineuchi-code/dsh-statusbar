@@ -524,9 +524,16 @@ async function readKimi(ctx, config) {
   }
   if (!key) return failure('no_credential', 'Set KIMI_SUB_API_KEY (or config.providers.kimi.apiKey)')
 
-  const result = await requestJson(new URL('/coding/v1/usages', provider.baseUrl || 'https://api.kimi.com'), {
-    headers: { authorization: `Bearer ${key}`, accept: 'application/json' },
-  })
+  // The connection to this Cloudflare front occasionally hangs mid-handshake;
+  // re-resolve DNS and retry a few times before giving up.
+  const usagesUrl = new URL('/coding/v1/usages', provider.baseUrl || 'https://api.kimi.ai')
+  let result = null
+  for (let attempt = 0; attempt < 3; attempt++) {
+    result = await requestJson(usagesUrl, {
+      headers: { authorization: `Bearer ${key}`, accept: 'application/json' },
+    }, 8000)
+    if (!result.network) break
+  }
   if (result.network) return networkFailure(result)
   if (result.status === 401 || result.status === 403) return failure('auth', 'The Kimi subscription key was rejected')
   if (!result.ok) return failure('http', `Kimi usage answered HTTP ${result.status}`)
