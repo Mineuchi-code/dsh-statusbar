@@ -26,7 +26,7 @@ Source: https://github.com/Mineuchi-code/dsh-statusbar
 |---|---|---|
 | DeepSeek | `deepseekAccount` balance (recharge + bonus wallets); fallback to `GET /user/balance` | signed-in DeepSeek account, else `DEEPSEEK_API_KEY` |
 | Codex | `GET https://chatgpt.com/backend-api/wham/usage` (plan, 5h/7d windows, credits) | native Codex login in `~/.codex/auth.json` |
-| Kimi | `GET https://api.kimi.com/coding/v1/usages` (weekly quota, 5h rolling window, booster spend) | Kimi For Coding key (`KIMI_SUB_API_KEY`) |
+| Kimi | `GET https://api.kimi.ai/coding/v1/usages` (5h window, monthly quota, booster spend) | Kimi For Coding key (`KIMI_SUB_API_KEY`) |
 | OpenRouter | `GET https://openrouter.ai/api/v1/credits` (`total_credits - total_usage`) | `OPENROUTER_API_KEY` |
 
 When a chip is not ready it still renders: the mini icon turns amber or red and the tooltip /
@@ -88,7 +88,7 @@ Edit the profile patch (`cordis.patch.yml`) and add `config` to the `dsh-statusb
         enabled: true
         label: Kimi
         apiKeyEnv: KIMI_SUB_API_KEY
-        baseUrl: https://api.kimi.com
+        baseUrl: https://api.kimi.ai
       openrouter:
         enabled: true
         label: OpenRouter
