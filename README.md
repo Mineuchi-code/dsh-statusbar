@@ -107,6 +107,9 @@ the browser (`localStorage`), so they are per page profile.
 
 ## Notes
 
+- The snapshot route applies DSH Connection admission (`ctx.connection.requestRejection`):
+  Host/Origin checks plus the same browser authentication as the rest of the web app, so
+  unauthenticated clients receive 401 instead of open balances (since 1.0.1).
 - `shell.bottom` is a single-occupant seat and the lowest `priority` wins, so this bundle
   registers with `priority: -10`. While it is enabled the experimental DevTools bottom
   panel (`@deepseek-ai/dsh-experimental-inspector`) does not render. Disable that bundle,

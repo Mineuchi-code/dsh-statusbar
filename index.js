@@ -512,6 +512,19 @@ export const inject = ['webServer']
 export function apply(ctx, rawConfig) {
   const config = normalizeConfig(rawConfig)
   const ttl = config.refreshSeconds * 1000
+  // Optional DSH admission: Host/Origin checks plus browser authentication, applied to this
+  // plugin's Web route through Connection's own trust policy (open-market review note).
+  const connection = ctx.get('connection')
+  const requestRejection =
+    connection && typeof connection.requestRejection === 'function'
+      ? (headers) => {
+          try {
+            return connection.requestRejection({ headers })
+          } catch {
+            return 403
+          }
+        }
+      : null
   let cache = null
   let cachedAt = 0
   let inflight = null
@@ -542,6 +555,13 @@ export function apply(ctx, rawConfig) {
   const handler = async (req, res) => {
     try {
       const requestUrl = new URL(req.url || '/', 'http://127.0.0.1')
+      if (requestRejection) {
+        const rejection = requestRejection(req.headers)
+        if (rejection) {
+          sendJson(res, rejection, { ok: false, error: 'request_rejected' }, req.method === 'HEAD')
+          return
+        }
+      }
       if (req.method !== 'GET' && req.method !== 'HEAD') {
         sendJson(res, 405, { ok: false, error: 'method_not_allowed' })
         return

@@ -1,14 +1,16 @@
 # Publishing @mineuchi/dsh-status-bar
 
-Status: **npm published** as `@mineuchi/dsh-status-bar@1.0.0` (2026-10-31). Source pushed to
-GitHub. The only remaining step is the maintainer-reviewed listing request on dshopen.org.
+Status: **npm published** as `@mineuchi/dsh-status-bar@1.0.1` (2026-11-01). Source pushed to
+GitHub. Listed on dshopen.org with the `verified` label. Version 1.0.1 answers the review
+note: the snapshot route now applies DSH Connection admission (`requestRejection`), so
+unauthenticated clients receive 401 instead of open balances.
 
 ## npm
 
 Package name: `@mineuchi/dsh-status-bar` (npm rejected the unscoped name as too similar to
 the existing `dsh-statusbar`).
 Published: https://www.npmjs.com/package/@mineuchi/dsh-status-bar
-Version: `1.0.0`, license MIT, `engines.dsh: >=0.2.0-rc.1 <0.3.0-0`.
+Version: `1.0.1`, license MIT, `engines.dsh: >=0.2.0-rc.1 <0.3.0-0`.
 
 For the next release bump the version, then:
 
@@ -52,7 +54,8 @@ MIT, no telemetry, keys stay on the Host.
 **Additional details**
 
 ```
-- npm: @mineuchi/dsh-status-bar@1.0.0
+- npm: @mineuchi/dsh-status-bar@1.0.1
+- 1.0.1: snapshot route now behind DSH Connection admission (requestRejection); unauthenticated clients get 401
 - Repository: https://github.com/Mineuchi-code/dsh-statusbar
 - License: MIT
 - Requires DSH: >=0.2.0-rc.1 <0.3.0-0
