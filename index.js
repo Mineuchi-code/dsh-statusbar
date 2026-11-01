@@ -47,7 +47,7 @@ const DEFAULTS = {
   enabled: true,
   compact: false,
   refreshSeconds: 120,
-  layout: ['deepseek', 'codex', 'openrouter', 'spacer', 'radio'],
+  layout: ['deepseek', 'codex', 'kimi', 'openrouter', 'spacer', 'radio'],
   providers: {
     deepseek: {
       enabled: true,
@@ -66,6 +66,13 @@ const DEFAULTS = {
       apiKey: '',
       apiKeyEnv: 'OPENAI_API_KEY',
     },
+    kimi: {
+      enabled: true,
+      label: 'Kimi',
+      apiKey: '',
+      apiKeyEnv: 'KIMI_SUB_API_KEY',
+      baseUrl: 'https://api.kimi.com',
+    },
     openrouter: {
       enabled: true,
       label: 'OpenRouter',
@@ -83,8 +90,10 @@ const DEFAULTS = {
 
 const PLAN_LABELS = {
   free: 'Free',
+  basic: 'Basic',
   plus: 'Plus',
   pro: 'Pro',
+  advanced: 'Advanced',
   prolite: 'Pro 100',
   promax: 'Pro 500',
   team: 'Team',
@@ -124,7 +133,7 @@ function normalizeConfig(raw) {
   config.layout = layout.map((entry) => String(entry)).filter(Boolean)
 
   const providers = {}
-  for (const id of ['deepseek', 'codex', 'openrouter']) {
+  for (const id of ['deepseek', 'codex', 'kimi', 'openrouter']) {
     const base = DEFAULTS.providers[id]
     const given = isObject(config.providers) && isObject(config.providers[id]) ? config.providers[id] : {}
     providers[id] = { ...base, ...given, enabled: given.enabled !== false }
@@ -166,6 +175,7 @@ function publicConfig(config) {
     providers: {
       deepseek: { enabled: config.providers.deepseek.enabled, label: config.providers.deepseek.label },
       codex: { enabled: config.providers.codex.enabled, label: config.providers.codex.label },
+      kimi: { enabled: config.providers.kimi.enabled, label: config.providers.kimi.label },
       openrouter: { enabled: config.providers.openrouter.enabled, label: config.providers.openrouter.label },
     },
     radio: {
@@ -479,11 +489,100 @@ async function readCodex(ctx, config) {
   return failure('no_credential', 'Codex is not signed in and no OpenAI API key is configured')
 }
 
+function rollingSeconds(window) {
+  if (!isObject(window)) return null
+  const duration = Number(window.duration)
+  if (!Number.isFinite(duration) || duration <= 0) return null
+  const unit = String(window.timeUnit || '').toUpperCase()
+  if (unit.includes('DAY')) return duration * 86400
+  if (unit.includes('HOUR')) return duration * 3600
+  if (unit.includes('MINUTE')) return duration * 60
+  if (unit.includes('SECOND')) return duration
+  return null
+}
+
+function kimiQuotaWindow(label, quota) {
+  const limit = Number(quota && quota.limit)
+  const used = Number(quota && quota.used)
+  const usedPercent = Number.isFinite(limit) && limit > 0 && Number.isFinite(used)
+    ? clamp((used / limit) * 100, 0, 100, null)
+    : null
+  const resetsAt = quota && quota.resetTime ? Date.parse(quota.resetTime) : NaN
+  return { label, usedPercent, resetsAt: Number.isFinite(resetsAt) ? resetsAt : null }
+}
+
+async function readKimi(ctx, config) {
+  const provider = config.providers.kimi
+  let key = typeof provider.apiKey === 'string' && provider.apiKey.trim() ? provider.apiKey.trim() : undefined
+  if (!key) {
+    // The Kimi Code subscription key: DSH credential store first, then ambient env fallbacks.
+    const envNames = [provider.apiKeyEnv || 'KIMI_SUB_API_KEY', 'KIMI_CODE_API_KEY', 'KIMI_API_KEY', 'MOONSHOT_API_KEY']
+    for (const name of envNames) {
+      key = await resolveKey(ctx, '', name)
+      if (key) break
+    }
+  }
+  if (!key) return failure('no_credential', 'Set KIMI_SUB_API_KEY (or config.providers.kimi.apiKey)')
+
+  const result = await requestJson(new URL('/coding/v1/usages', provider.baseUrl || 'https://api.kimi.com'), {
+    headers: { authorization: `Bearer ${key}`, accept: 'application/json' },
+  })
+  if (result.network) return networkFailure(result)
+  if (result.status === 401 || result.status === 403) return failure('auth', 'The Kimi subscription key was rejected')
+  if (!result.ok) return failure('http', `Kimi usage answered HTTP ${result.status}`)
+  const data = isObject(result.data) ? result.data : null
+  if (!data) return failure('parse', 'Kimi returned an unexpected usage payload')
+
+  const rawLevel = data.user && isObject(data.user.membership) ? data.user.membership.level : null
+  const plan = rawLevel ? planLabel(String(rawLevel).replace(/^level_/i, '')) : null
+  const windows = []
+  // Weekly quota of the subscription period (7 days).
+  if (isObject(data.usage)) windows.push(kimiQuotaWindow('7d', data.usage))
+  // Rolling limit windows, including the 5h (300 minute) window.
+  if (Array.isArray(data.limits)) {
+    for (const limit of data.limits) {
+      if (!isObject(limit) || !isObject(limit.detail)) continue
+      windows.push(kimiQuotaWindow(windowLabel(rollingSeconds(limit.window)), limit.detail))
+    }
+  }
+  const booster = isObject(data.boosterWallet) ? data.boosterWallet : null
+  const monthlyLimit = booster && isObject(booster.monthlyChargeLimit) ? booster.monthlyChargeLimit : null
+  const monthlyUsed = booster && isObject(booster.monthlyUsed) ? booster.monthlyUsed : null
+  const detail = monthlyLimit && Number.isFinite(Number(monthlyLimit.priceInCents))
+    ? `booster ¥${(Number(monthlyUsed && monthlyUsed.priceInCents) || 0) / 100} / ¥${Number(monthlyLimit.priceInCents) / 100}`
+    : null
+
+  // Headroom is the tightest window: report the one closest to its limit.
+  let tightest = null
+  for (const window of windows) {
+    if (window.usedPercent === null) continue
+    if (tightest === null || window.usedPercent > tightest.usedPercent) tightest = window
+  }
+  if (tightest !== null) {
+    return {
+      status: 'ready',
+      unit: 'percent',
+      amount: round2(Math.max(0, 100 - tightest.usedPercent)),
+      window: tightest.label,
+      plan,
+      windows,
+      detail,
+      source: 'kimi',
+      updatedAt: Date.now(),
+    }
+  }
+  if (plan) {
+    return { status: 'ready', unit: 'plan', amount: null, plan, windows, detail, source: 'kimi', updatedAt: Date.now() }
+  }
+  return failure('parse', 'Kimi usage returned no plan or quota')
+}
+
 async function readProviders(ctx, config) {
   const jobs = {
     deepseek: config.providers.deepseek.enabled ? readDeepseek(ctx, config) : Promise.resolve({ status: 'disabled' }),
     openrouter: config.providers.openrouter.enabled ? readOpenrouter(ctx, config) : Promise.resolve({ status: 'disabled' }),
     codex: config.providers.codex.enabled ? readCodex(ctx, config) : Promise.resolve({ status: 'disabled' }),
+    kimi: config.providers.kimi.enabled ? readKimi(ctx, config) : Promise.resolve({ status: 'disabled' }),
   }
   const entries = await Promise.all(
     Object.entries(jobs).map(async ([id, job]) => {

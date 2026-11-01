@@ -26,6 +26,7 @@ Source: https://github.com/Mineuchi-code/dsh-statusbar
 |---|---|---|
 | DeepSeek | `deepseekAccount` balance (recharge + bonus wallets); fallback to `GET /user/balance` | signed-in DeepSeek account, else `DEEPSEEK_API_KEY` |
 | Codex | `GET https://chatgpt.com/backend-api/wham/usage` (plan, 5h/7d windows, credits) | native Codex login in `~/.codex/auth.json` |
+| Kimi | `GET https://api.kimi.com/coding/v1/usages` (weekly quota, 5h rolling window, booster spend) | Kimi For Coding key (`KIMI_SUB_API_KEY`) |
 | OpenRouter | `GET https://openrouter.ai/api/v1/credits` (`total_credits - total_usage`) | `OPENROUTER_API_KEY` |
 
 When a chip is not ready it still renders: the mini icon turns amber or red and the tooltip /
@@ -68,7 +69,7 @@ Edit the profile patch (`cordis.patch.yml`) and add `config` to the `dsh-statusb
   config:
     refreshSeconds: 120        # 15..3600, lazy cache TTL
     compact: false             # hide chip labels
-    layout: [deepseek, codex, openrouter, spacer, radio]
+    layout: [deepseek, codex, kimi, openrouter, spacer, radio]
     providers:
       deepseek:
         enabled: true
@@ -83,6 +84,11 @@ Edit the profile patch (`cordis.patch.yml`) and add `config` to the `dsh-statusb
         baseUrl: https://chatgpt.com
         billingBaseUrl: https://api.openai.com
         apiKeyEnv: OPENAI_API_KEY
+      kimi:
+        enabled: true
+        label: Kimi
+        apiKeyEnv: KIMI_SUB_API_KEY
+        baseUrl: https://api.kimi.com
       openrouter:
         enabled: true
         label: OpenRouter

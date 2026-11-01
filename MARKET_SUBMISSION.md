@@ -62,7 +62,7 @@ MIT, no telemetry, keys stay on the Host.
 - Category: interface
 - Icon: icon.svg inside the package (also ./icon export)
 - Install: dsh plugin --profile desktop add @mineuchi/dsh-status-bar
-- Providers: DeepSeek account balance, Codex ChatGPT usage, OpenRouter credits
+- Providers: DeepSeek account balance, Codex ChatGPT usage, Kimi For Coding quota, OpenRouter credits
 - Radio: 8 stations, playlist stations supported via `tracks`
 ```
 

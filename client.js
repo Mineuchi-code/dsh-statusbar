@@ -47,8 +47,8 @@ window.__ModuleLoader__.load({
       { id: 'eve', name: 'EVE Online · Original Soundtrack', tag: 'EVE', tracks: EVE_TRACKS },
     ]
 
-    const DEFAULT_LAYOUT = ['deepseek', 'codex', 'openrouter', 'spacer', 'radio']
-    const PROVIDERS = ['deepseek', 'codex', 'openrouter']
+    const DEFAULT_LAYOUT = ['deepseek', 'codex', 'kimi', 'openrouter', 'spacer', 'radio']
+    const PROVIDERS = ['deepseek', 'codex', 'kimi', 'openrouter']
 
     const EN = {
       barLabel: 'Status bar',
@@ -72,6 +72,7 @@ window.__ModuleLoader__.load({
       status_error: 'Lookup failed',
       provider_deepseek: 'DeepSeek',
       provider_codex: 'Codex',
+      provider_kimi: 'Kimi',
       provider_openrouter: 'OpenRouter',
       provider_radio: 'Radio',
       credits: 'credits',
@@ -100,6 +101,7 @@ window.__ModuleLoader__.load({
       source_credits: 'OpenRouter credits',
       source_chatgpt: 'ChatGPT usage',
       source_billing: 'OpenAI billing',
+      source_kimi: 'Kimi Code usage',
     }
 
     const RU = {
@@ -124,6 +126,7 @@ window.__ModuleLoader__.load({
       status_error: 'Ошибка',
       provider_deepseek: 'DeepSeek',
       provider_codex: 'Codex',
+      provider_kimi: 'Kimi',
       provider_openrouter: 'OpenRouter',
       provider_radio: 'Радио',
       credits: 'кредитов',
@@ -152,6 +155,7 @@ window.__ModuleLoader__.load({
       source_credits: 'Кредиты OpenRouter',
       source_chatgpt: 'Использование ChatGPT',
       source_billing: 'Биллинг OpenAI',
+      source_kimi: 'Использование Kimi Code',
     }
 
     const ZH = {
@@ -204,6 +208,7 @@ window.__ModuleLoader__.load({
       source_credits: 'OpenRouter 额度',
       source_chatgpt: 'ChatGPT 用量',
       source_billing: 'OpenAI 账单',
+      source_kimi: 'Kimi Code 用量',
     }
 
     const CSS = [
@@ -359,6 +364,7 @@ window.__ModuleLoader__.load({
     const PROVIDER_COLORS = {
       deepseek: '#4D6BFE',
       codex: '#10A37F',
+      kimi: '#F43F5E',
       openrouter: '#8B5CF6',
     }
 
@@ -386,6 +392,10 @@ window.__ModuleLoader__.load({
       if (id === 'codex') {
         // Code brackets.
         return h('svg', common, h('path', { d: 'M4.1 2.5 1.5 6l2.6 3.5M7.9 2.5 10.5 6 7.9 9.5', stroke: 'currentColor', strokeWidth: 1.4, fill: 'none', strokeLinecap: 'round', strokeLinejoin: 'round' }))
+      }
+      if (id === 'kimi') {
+        // A crescent moon (Moonshot).
+        return h('svg', common, h('path', { d: 'M9.6 6.9A4.5 4.5 0 1 1 6.9 1.3 3.6 3.6 0 0 0 9.6 6.9Z', fill: 'currentColor' }))
       }
       // One route splitting into two.
       return h(
@@ -714,6 +724,8 @@ window.__ModuleLoader__.load({
                 return t('source_chatgpt')
               case 'billing':
                 return t('source_billing')
+              case 'kimi':
+                return t('source_kimi')
               default:
                 return source
             }
