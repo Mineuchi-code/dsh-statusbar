@@ -555,9 +555,11 @@ async function readKimi(ctx, config) {
     const USAGE_LABELS = { limit_5h: '5h', limit_week: '7d', limit_month_total: '30d', limit_month_code: '30d code' }
     for (const [name, value] of Object.entries(data.usages)) {
       if (!isObject(value)) continue
+      const label = USAGE_LABELS[name] || name
+      if (windows.some((window) => window.label === label)) continue
       const usedPercent = clamp(Number(value.used_ratio) * 100, 0, 100, null)
       const resetsAt = value.reset_time ? Date.parse(value.reset_time) : NaN
-      windows.push({ label: USAGE_LABELS[name] || name, usedPercent, resetsAt: Number.isFinite(resetsAt) ? resetsAt : null })
+      windows.push({ label, usedPercent, resetsAt: Number.isFinite(resetsAt) ? resetsAt : null })
     }
   }
   // Scheme A (pi-kimi-usage): weekly Quota of the 7-day subscription period.
