@@ -71,7 +71,7 @@ const DEFAULTS = {
       label: 'Kimi',
       apiKey: '',
       apiKeyEnv: 'KIMI_SUB_API_KEY',
-      baseUrl: 'https://api.kimi.com',
+      baseUrl: 'https://api.kimi.ai',
     },
     openrouter: {
       enabled: true,
@@ -536,8 +536,6 @@ async function readKimi(ctx, config) {
   const rawLevel = data.user && isObject(data.user.membership) ? data.user.membership.level : null
   const plan = rawLevel ? planLabel(String(rawLevel).replace(/^level_/i, '')) : null
   const windows = []
-  // Weekly quota of the subscription period (7 days).
-  if (isObject(data.usage)) windows.push(kimiQuotaWindow('7d', data.usage))
   // Rolling limit windows, including the 5h (300 minute) window.
   if (Array.isArray(data.limits)) {
     for (const limit of data.limits) {
@@ -545,6 +543,18 @@ async function readKimi(ctx, config) {
       windows.push(kimiQuotaWindow(windowLabel(rollingSeconds(limit.window)), limit.detail))
     }
   }
+  // Scheme B (current api.kimi.ai): named usage ratios, e.g. limit_5h / limit_month_total.
+  if (isObject(data.usages)) {
+    const USAGE_LABELS = { limit_5h: '5h', limit_week: '7d', limit_month_total: '30d', limit_month_code: '30d code' }
+    for (const [name, value] of Object.entries(data.usages)) {
+      if (!isObject(value)) continue
+      const usedPercent = clamp(Number(value.used_ratio) * 100, 0, 100, null)
+      const resetsAt = value.reset_time ? Date.parse(value.reset_time) : NaN
+      windows.push({ label: USAGE_LABELS[name] || name, usedPercent, resetsAt: Number.isFinite(resetsAt) ? resetsAt : null })
+    }
+  }
+  // Scheme A (pi-kimi-usage): weekly Quota of the 7-day subscription period.
+  if (isObject(data.usage)) windows.push(kimiQuotaWindow('7d', data.usage))
   const booster = isObject(data.boosterWallet) ? data.boosterWallet : null
   const monthlyLimit = booster && isObject(booster.monthlyChargeLimit) ? booster.monthlyChargeLimit : null
   const monthlyUsed = booster && isObject(booster.monthlyUsed) ? booster.monthlyUsed : null
